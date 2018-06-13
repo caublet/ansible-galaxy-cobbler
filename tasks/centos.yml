@@ -100,7 +100,7 @@
           (cobbler_distros is none)
           or
           (cobbler_distros | trim == '')
-        )r
+        )
   with_items: "{{ cobbler_distros | default([])}}"
   ignore_errors: true
 
