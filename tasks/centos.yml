@@ -81,20 +81,31 @@
          src={{ item.device_or_iso_path }}
          opts=ro fstype=iso9660 state=mounted
   with_items: "{{ cobbler_distros | default([])}}"
-  when: cobbler_distros is defined
+  when: not(
+          (cobbler_distros is undefined)
+          or
+          (cobbler_distros is none)
+          or
+          (cobbler_distros | trim == '')
+        )
 
 - name: import to distro to cobbler
   shell: cobbler import --name={{ item.distro_name }}
          --arch={{ item.arch }}
          --path=/mnt/{{ item.distro_name }}
          --kickstart=/var/lib/cobbler/kickstarts/{{ item.kickstart_file_name }}
-  when: cobbler_distros is defined
+  when: not(
+          (cobbler_distros is undefined)
+          or
+          (cobbler_distros is none)
+          or
+          (cobbler_distros | trim == '')
+        )r
   with_items: "{{ cobbler_distros | default([])}}"
   ignore_errors: true
 
-- name: cobbler sync
-  shell: cobbler sync
-
+#- name: cobbler sync
+#  shell: cobbler sync
 
 # cobbler-web
 - name: install cobbler-web
